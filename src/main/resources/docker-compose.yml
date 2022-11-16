@@ -2,15 +2,15 @@
 version: '3.1'
 
 services:
- # db:
- #   image: postgres
- #   restart: always
- #   user: postgres
- #   ports:
- #     - "5432:5432"
- #   environment:
- #     POSTGRES_USER: postgres
- #     POSTGRES_PASSWORD: mypass
+  db:
+    image: postgres
+    restart: always
+    user: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mypass
 
   zookeper:
     image: confluentinc/cp-zookeeper:7.2.1

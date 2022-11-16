@@ -1,13 +1,76 @@
-# Use postgres/example user/password credentials
+# musab erayman
 version: '3.1'
 
 services:
-  db:
-    image: postgres
-    restart: always
-    user: postgres
+ # db:
+ #   image: postgres
+ #   restart: always
+ #   user: postgres
+ #   ports:
+ #     - "5432:5432"
+ #   environment:
+ #     POSTGRES_USER: postgres
+ #     POSTGRES_PASSWORD: mypass
+
+  zookeper:
+    image: confluentinc/cp-zookeeper:7.2.1
+    container_name: zookeeper
     ports:
-      - 5432:5432
+      - "2181:2181"
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: mypass
+      ZOOKEEPER_CLIENT_PORT: 2181
+    restart: unless-stopped
+  kafka1:
+    image: confluentinc/cp-kafka:7.2.1
+    container_name: kafka1
+    ports:
+      - "8097:8097"
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: EXTERNAL://localhost:8097,INTERNAL://kafka1:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: EXTERNAL:PLAINTEXT,INTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_BROKER_ID: 1
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 3
+      #KAFKA_CREATE_TOPICS: "order_delivery_statistics:1:3"
+    depends_on:
+      - zookeper
+    restart: unless-stopped
+
+
+
+  kafka2:
+    image: confluentinc/cp-kafka:7.2.1
+    container_name: kafka2
+    ports:
+      - "8098:8098"
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: EXTERNAL://localhost:8098,INTERNAL://kafka2:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: EXTERNAL:PLAINTEXT,INTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_BROKER_ID: 2
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 3
+      #KAFKA_CREATE_TOPICS: "order_delivery_statistics:1:3"
+    depends_on:
+      - zookeper
+    restart: unless-stopped
+
+
+  kafka3:
+    image: confluentinc/cp-kafka:7.2.1
+    container_name: kafka3
+    ports:
+      - "8099:8099"
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: EXTERNAL://localhost:8099,INTERNAL://kafka3:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: EXTERNAL:PLAINTEXT,INTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_BROKER_ID: 3
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 3
+      #KAFKA_CREATE_TOPICS: "order_delivery_statistics:1:3"
+
+    depends_on:
+      - zookeper
+    restart: unless-stopped

@@ -5,8 +5,9 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity(name = "x")
-@Table(name = "x")
+//Entity class for Order table
+@Entity(name = "\"Order\"")
+@Table(name = "\"Order\"")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
